@@ -19,11 +19,21 @@ body {
   background-color: white;
   text-align: center;
 }
-.game h1 {
+.game h1, .game .score, .game .lives {
   color: #333;
+  line-height: 38px;
+}
+.game .score {
+  position: absolute;
+  left: 30px;
+}
+.game .lives {
+  position: absolute;
+  right: 30px;
+  top: 25px;
 }
 .game img {
-  width: 200px;
+  height: 120px;
   filter: drop-shadow(0 0 40px #c0e0ff);
   border-radius: 15px;
   display: block;
