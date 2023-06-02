@@ -3,31 +3,40 @@ import { useState, useRef, useEffect } from "react"
 import data from "./countries.json";
 // console.log(Object.keys(data));
 
-export default function Game() {
-  const [currentFlag, setFlag] = useState(Object.keys(data)[Math.floor(Math.random() * (Object.keys(data).length - 1))])
-  let randButtons = [data[currentFlag], data[Object.keys(data)[Math.floor(Math.random() * (Object.keys(data).length - 1))]], data[Object.keys(data)[Math.floor(Math.random() * (Object.keys(data).length - 1))]], data[Object.keys(data)[Math.floor(Math.random() * (Object.keys(data).length - 1))]]]
-  for (let i = 3; i > 0; i--) {
-    let random = Math.floor(Math.random() * (i + 1))
-    let slot = randButtons[i]
-    randButtons[i] = randButtons[random]
-    randButtons[random] = slot
-  }
-  const [buttons, setButtons] = useState(randButtons)
+export default function App() {
+  const [codes, setCodes] = useState(Object.keys[data])
+  console.log(Object.keys[data])
+  const [currentFlag, setFlag] = useState("")
+  const [buttons, setButtons] = useState([])
   const [score, setScore] = useState(0)
   const [lives, setLives] = useState(3)
 
-  function restart() {
-    setFlag(Object.keys(data)[Math.floor(Math.random() * (Object.keys(data).length - 1))])
-    let randButtons = [data[currentFlag], data[Object.keys(data)[Math.floor(Math.random() * (Object.keys(data).length - 1))]], data[Object.keys(data)[Math.floor(Math.random() * (Object.keys(data).length - 1))]], data[Object.keys(data)[Math.floor(Math.random() * (Object.keys(data).length - 1))]]]
-    console.log(data[currentFlag]);
+  function getQuiz() {
+    let newFlag = codes[Math.floor(Math.random() * (codes.length - 1))]
+    let newButtons = [
+      data[newFlag],
+      data[codes[Math.floor(Math.random() * (codes.length - 1))]],
+      data[codes[Math.floor(Math.random() * (codes.length - 1))]],
+      data[codes[Math.floor(Math.random() * (codes.length - 1))]]
+    ]
     for (let i = 3; i > 0; i--) {
       let random = Math.floor(Math.random() * (i + 1))
-      let slot = randButtons[i]
-      randButtons[i] = randButtons[random]
-      randButtons[random] = slot
+      let slot = newButtons[i]
+      newButtons[i] = newButtons[random]
+      newButtons[random] = slot
     }
-    setButtons(randButtons)
+    setFlag(newFlag)
+    setButtons(newButtons)
   }
+
+  function restart() {
+    setFlag(Object.keys(data)[Math.floor(Math.random() * (Object.keys(data).length - 1))])
+  }
+
+  useEffect(() => {
+    getQuiz()
+  }, [])
+
 
   function answer(element) {
     if (data[currentFlag] === element) {
