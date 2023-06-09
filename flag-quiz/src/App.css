@@ -7,33 +7,39 @@ body {
   background-color: #c0e0ff;
 }
 
-.game {
+form {
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2666666667);
+  padding: 25px;
+  border-radius: 15px;
+  background-color: white;
+}
+
+.game, .settings {
   max-width: 600px;
   width: 90%;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 25px;
-  border-radius: 15px;
-  background-color: white;
   text-align: center;
+  opacity: 0;
 }
-.game h1, .game .score, .game .lives {
+.game h1, .game .score, .game .lives, .settings h1, .settings .score, .settings .lives {
   color: #333;
   line-height: 38px;
 }
-.game .score {
+.game .score, .settings .score {
   position: absolute;
+  top: 15px;
   left: 30px;
 }
-.game .lives {
+.game .lives, .settings .lives {
   position: absolute;
-  right: 30px;
-  top: 25px;
+  left: 30px;
+  top: 50px;
 }
-.game img {
-  height: 120px;
+.game img, .settings img {
+  height: 160px;
   filter: drop-shadow(0 0 40px #c0e0ff);
   border-radius: 15px;
   display: block;
@@ -41,7 +47,19 @@ body {
   margin-top: 25px;
   margin-bottom: 25px;
 }
-.game button {
+.game .disabled, .settings .disabled {
+  pointer-events: none;
+  opacity: 0.7;
+}
+.game .correct, .settings .correct {
+  background-color: #bfb;
+  border: 1px solid #6a6;
+}
+.game .incorrect, .settings .incorrect {
+  background-color: #ffbbbb;
+  border: 1px solid #aa6666;
+}
+.game button, .settings button {
   width: calc(50% - 10px);
   border: 1px solid #9ccdff;
   border-radius: 15px;
@@ -52,7 +70,35 @@ body {
   cursor: pointer;
   font-size: 18px;
   color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  padding: 0 10px;
 }
-.game button:hover {
+.game button:not(.correct):not(.incorrect):hover, .settings button:not(.correct):not(.incorrect):hover {
   background-color: #d2e9ff;
+}
+.game .restartButton, .settings .restartButton {
+  width: 90%;
+  margin: 0;
+  border-radius: 0 0 15px 15px;
+  border: none;
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  z-index: -1;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2666666667);
+  transition: 0.4s;
+}
+.game .settingsButton, .settings .settingsButton {
+  width: 60px;
+  height: 60px;
+  background-image: url("../public/settings.png");
+  background-size: 80%;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  top: 25px;
+  right: 25px;
 }/*# sourceMappingURL=App.css.map */

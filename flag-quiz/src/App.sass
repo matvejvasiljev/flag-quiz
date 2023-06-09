@@ -5,17 +5,23 @@
 body
     background-color: #c0e0ff
 
-.game
+form
+    box-shadow: 0 0 25px #00000044
+    padding: 25px
+    border-radius: 15px
+    background-color: white
+
+.game, .settings
     max-width: 600px
     width: 90%
     position: absolute
     top: 50%
     left: 50%
     transform: translate(-50%, -50%)
-    padding: 25px
-    border-radius: 15px
-    background-color: white
     text-align: center
+    opacity: 0
+
+
 
     h1, .score, .lives
         color: #333
@@ -23,21 +29,33 @@ body
 
     .score
         position: absolute
+        top: 15px
         left: 30px
 
     .lives
         position: absolute
-        right: 30px
-        top: 25px
+        left: 30px
+        top: 50px
 
     img
-        height: 120px
+        height: 160px
         filter: drop-shadow(0 0 40px #c0e0ff)
         border-radius: 15px
         display: block
         margin: auto
         margin-top: 25px
         margin-bottom: 25px
+
+    .disabled
+        pointer-events: none
+        opacity: 0.7
+
+    .correct
+        background-color: #bfb
+        border: 1px solid #6a6
+    .incorrect
+        background-color: #ffbbbb
+        border: 1px solid #aa6666
 
     button
         width: calc( 50% - 10px )
@@ -50,7 +68,38 @@ body
         cursor: pointer
         font-size: 18px
         color: #333
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+        box-sizing: border-box
+        padding: 0 10px
 
-        &:hover
+        &:not(.correct):not(.incorrect):hover
             background-color: #d2e9ff
-            
+
+    .restartButton
+        width: 90%
+        margin: 0
+        border-radius: 0 0 15px 15px
+        border: none
+        position: absolute
+        bottom: 0
+        left: 5%
+        // transform: translateY(100%)
+        z-index: -1
+        box-shadow: 0 0 25px #00000044
+        transition: 0.4s
+
+    .settingsButton
+        width: 60px
+        height: 60px
+        background-image: url("../public/settings.png")
+        background-size: 80%
+        background-repeat: no-repeat
+        background-position: center
+        position: absolute
+        top: 25px
+        right: 25px
+
+// .settings
+//     opacity: 1
