@@ -10,8 +10,10 @@ form
     padding: 25px
     border-radius: 15px
     background-color: white
+    transition: 0.4s
 
 .game, .settings
+    transition: 0.4s
     max-width: 600px
     width: 90%
     position: absolute
@@ -19,11 +21,8 @@ form
     left: 50%
     transform: translate(-50%, -50%)
     text-align: center
-    opacity: 0
 
-
-
-    h1, .score, .lives
+    h1, .score, .lives, .countryName
         color: #333
         line-height: 38px
 
@@ -36,6 +35,10 @@ form
         position: absolute
         left: 30px
         top: 50px
+
+    .countryName
+        margin: 20px 0
+        font-size: 40px
 
     img
         height: 160px
@@ -74,6 +77,9 @@ form
         box-sizing: border-box
         padding: 0 10px
 
+        img
+            width: 100%
+
         &:not(.correct):not(.incorrect):hover
             background-color: #d2e9ff
 
@@ -101,5 +107,73 @@ form
         top: 25px
         right: 25px
 
-// .settings
-//     opacity: 1
+.settings
+    opacity: 0
+    pointer-events: none
+
+    .settingsLeft
+        width: 50%
+        float: left
+        display: inline-block
+
+        button
+            width: 100%
+
+    .settingsRight
+        margin-top: 10px
+        h3
+            display: inline-block
+            vertical-align: middle
+            margin: 0 10px
+
+.settingsShow
+    opacity: 1
+    pointer-events: auto
+
+.switch
+    position: relative
+    display: inline-block
+    width: 60px
+    height: 34px
+    vertical-align: middle
+
+    input
+        opacity: 0
+        width: 0
+        height: 0
+
+.slider
+    position: absolute
+    cursor: pointer
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background-color: #c5e2ff
+    -webkit-transition: .4s
+    transition: .4s
+
+    &:before
+        position: absolute
+        content: ""
+        height: 26px
+        width: 26px
+        left: 4px
+        bottom: 4px
+        background-color: white
+        -webkit-transition: .4s
+        transition: .4s
+
+input:focus + .slider
+    box-shadow: 0 0 1px #2196F3
+
+input:checked + .slider:before
+    -webkit-transform: translateX(26px)
+    -ms-transform: translateX(26px)
+    transform: translateX(26px)
+
+.slider.round
+    border-radius: 34px
+
+.slider.round:before
+    border-radius: 50%

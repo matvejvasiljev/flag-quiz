@@ -12,9 +12,11 @@ form {
   padding: 25px;
   border-radius: 15px;
   background-color: white;
+  transition: 0.4s;
 }
 
 .game, .settings {
+  transition: 0.4s;
   max-width: 600px;
   width: 90%;
   position: absolute;
@@ -22,9 +24,8 @@ form {
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  opacity: 0;
 }
-.game h1, .game .score, .game .lives, .settings h1, .settings .score, .settings .lives {
+.game h1, .game .score, .game .lives, .game .countryName, .settings h1, .settings .score, .settings .lives, .settings .countryName {
   color: #333;
   line-height: 38px;
 }
@@ -37,6 +38,10 @@ form {
   position: absolute;
   left: 30px;
   top: 50px;
+}
+.game .countryName, .settings .countryName {
+  margin: 20px 0;
+  font-size: 40px;
 }
 .game img, .settings img {
   height: 160px;
@@ -76,6 +81,9 @@ form {
   box-sizing: border-box;
   padding: 0 10px;
 }
+.game button img, .settings button img {
+  width: 100%;
+}
 .game button:not(.correct):not(.incorrect):hover, .settings button:not(.correct):not(.incorrect):hover {
   background-color: #d2e9ff;
 }
@@ -101,4 +109,80 @@ form {
   position: absolute;
   top: 25px;
   right: 25px;
+}
+
+.settings {
+  opacity: 0;
+  pointer-events: none;
+}
+.settings .settingsLeft {
+  width: 50%;
+  float: left;
+  display: inline-block;
+}
+.settings .settingsLeft button {
+  width: 100%;
+}
+.settings .settingsRight {
+  margin-top: 10px;
+}
+.settings .settingsRight h3 {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 10px;
+}
+
+.settingsShow {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  vertical-align: middle;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #c5e2ff;
+  transition: 0.4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }/*# sourceMappingURL=App.css.map */

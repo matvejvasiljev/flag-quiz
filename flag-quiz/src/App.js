@@ -12,8 +12,12 @@ export default function App() {
     const [buttonClass, setButtonClass] = useState("")
     const [score, setScore] = useState(0)
     const [lives, setLives] = useState(3)
+    const [time, setTime] = useState(60)
     const [correctButton, setCorrectButton] = useState(null)
     const [incorrectButton, setIncorrectButton] = useState(null)
+    const [settingsClass, setSettingsClass] = useState("")
+    const [gameMode, setGameMode] = useState("oneFlagFourCountries")
+    const [gameType, setGameType] = useState("lives")
 
     function getCountries() {
         fetch("https://restcountries.com/v3.1/all", {
@@ -73,10 +77,10 @@ export default function App() {
                 let newCountry = countries[Math.floor(Math.random() * (countries.length - 1))];
                 console.log(newCountry);
                 if (!selectedCountriesNames.includes(newCountry.name.common)) {
-                    selectedCountriesNames.push(newCountry.name.common);
+                    selectedCountriesNames.push(gameMode === "oneFlagFourCountries" ? newCountry.name.common : newCountry.flags.svg);
                 }
             }
-            selectedCountriesNames.splice(Math.floor(Math.random() * 4), 0, currentCountry)
+            selectedCountriesNames.splice(Math.floor(Math.random() * 4), 0, gameMode === "oneFlagFourCountries" ? currentCountry : currentFlag)
             setButtons(selectedCountriesNames)
             console.log(currentCountry);
         }
@@ -90,21 +94,26 @@ export default function App() {
     }, [countries])
 
     function answer(element, id) {
-        setCorrectButton(buttons.indexOf(currentCountry))
+        setCorrectButton(buttons.indexOf(gameMode === "oneFlagFourCountries" ? currentCountry : currentFlag))
         let newLives = lives
         setButtonClass("disabled")
 
-        if (currentCountry === element) {
+        if (currentCountry === element || currentFlag === element) {
             console.log("Right answer");
             setScore(score + 1)
         }
         else {
             setIncorrectButton(id)
-            newLives = lives - 1
-            setLives(newLives)
-            if (newLives < 1) {
-                setButtonClass("disabled")
-                console.log("Game Over");
+            if (gameType === "lives") {
+                newLives = lives - 1
+                setLives(newLives)
+                if (newLives < 1) {
+                    setButtonClass("disabled")
+                    console.log("Game Over");
+                }
+            }
+            else {
+
             }
         }
 
@@ -126,26 +135,57 @@ export default function App() {
         getQuiz()
     }
 
+    function gameModeChange(mode) {
+        setSettingsClass("")
+        setGameMode(mode)
+        console.log(mode);
+        restart()
+        setTime(60)
+    }
+
+    useEffect(() => {
+        const timeInterval = setInterval(() => {
+            setTime(time => time - 1)
+        }, 1000);
+        return () => clearInterval(timeInterval)
+    }, [])
+
+    function gameTypeChange() {
+        setGameType(gameType === "timer" ? "lives" : "timer")
+        setTime(60)
+    }
+
     return (
         <div className="main">
-            <div className="game">
+            <div className="game" style={settingsClass === "settingsShow" ? { opacity: "0" } : {}}>
                 <form action="">
                     <h2 className="score">Score: {score}</h2>
                     <h1>Flag Quiz</h1>
-                    <h2 className="lives">Lives: {lives}</h2>
-                    <button className="settingsButton"></button>
-                    <img src={currentFlag} alt="" />
+                    <h2 className="lives">{gameType === "lives" ? "Lives: " + lives : "Time: " + time}</h2>
+                    <button type="button" className="settingsButton" onClick={() => setSettingsClass("settingsShow")}></button>
+                    {gameMode === "oneFlagFourCountries" ? <img src={currentFlag} alt="" /> : <h2 className="countryName">{currentCountry}</h2>}
                     {buttons.map((element, id) => (
-                        <button className={buttonClass + (id === correctButton ? " correct" : "") + (id === incorrectButton ? " incorrect" : "")} key={id} type="button" onClick={() => answer(element, id)}>{element}</button>
+                        <button className={buttonClass + (id === correctButton ? " correct" : "") + (id === incorrectButton ? " incorrect" : "")} key={id} type="button" onClick={() => answer(element, id)}>{gameMode === "oneFlagFourCountries" ? element : <img src={element} alt="" />}</button>
                     ))}
                 </form>
-                <button style={lives < 1 ? { transform: "translateY(100%)" } : { transform: "" }} className="restartButton" onClick={() => restart()}>Restart</button>
+                <button style={lives < 1 ? { transform: "translateY(100%)" } : {}} className="restartButton" onClick={() => restart()}>Restart</button>
             </div>
-            <form className="settings" action="">
+            <form className={"settings " + settingsClass} action="">
                 <h1>Settings</h1>
-                <button>1 flag, 4 countries</button>
-                <button>1 country, 4 flags</button>
+                <div className="settingsLeft">
+                    <button type="button" onClick={() => gameModeChange("oneFlagFourCountries")}>1 flag, 4 countries</button>
+                    <button type="button" onClick={() => gameModeChange("oneCountryFourFlags")}>1 country, 4 flags</button>
+                    <button type="button" onClick={() => gameModeChange("ConnectFlags")}>Connect flags</button>
+                </div>
+                <div className="settingsRight">
+                    <h3>3 lives</h3>
+                    <label class="switch">
+                        <input onChange={() => gameTypeChange()} type="checkbox" />
+                        <span class="slider round"></span>
+                    </label>
+                    <h3>Timer</h3>
+                </div>
             </form>
         </div>
-    )
-}
+    );
+};
