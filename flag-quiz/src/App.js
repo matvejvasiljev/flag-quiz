@@ -3,6 +3,29 @@ import { useState, useEffect } from "react"
 // import data from "./countries.json";
 // console.log(Object.keys(data));
 
+function Timer() {
+    const [time, setTime] = useState(60);
+
+    function timeChange() {
+        const interval = setInterval(() => {
+            setTime(time => time - 1);
+            console.log(time);
+            if (time < 1) {
+                console.log("clear interval");
+                clearInterval(interval)
+            }
+        }, 1000);
+    };
+
+    useEffect(() => {
+        timeChange()
+    }, [])
+
+    return (
+        <h2 className="lives">Time: {time}</h2>
+    )
+}
+
 export default function App() {
     const [countries, setCountries] = useState([])
     // const [codes, setCodes] = useState(Object.keys(data))
@@ -13,6 +36,7 @@ export default function App() {
     const [score, setScore] = useState(0)
     const [lives, setLives] = useState(3)
     const [time, setTime] = useState(60)
+    // const [timeInterval, setTimeInterval] = useState(0)
     const [correctButton, setCorrectButton] = useState(null)
     const [incorrectButton, setIncorrectButton] = useState(null)
     const [settingsClass, setSettingsClass] = useState("")
@@ -75,14 +99,12 @@ export default function App() {
             const selectedCountriesNames = [];
             while (selectedCountriesNames.length < 3) {
                 let newCountry = countries[Math.floor(Math.random() * (countries.length - 1))];
-                console.log(newCountry);
                 if (!selectedCountriesNames.includes(newCountry.name.common)) {
                     selectedCountriesNames.push(gameMode === "oneFlagFourCountries" ? newCountry.name.common : newCountry.flags.svg);
                 }
             }
             selectedCountriesNames.splice(Math.floor(Math.random() * 4), 0, gameMode === "oneFlagFourCountries" ? currentCountry : currentFlag)
             setButtons(selectedCountriesNames)
-            console.log(currentCountry);
         }
     }, [currentCountry, countries])
 
@@ -128,7 +150,13 @@ export default function App() {
 
     function restart() {
         setScore(0)
-        setLives(3)
+        if (gameMode === "connectFlags") {
+            setLives(5)
+        }
+        else {
+            setLives(3)
+        }
+        setTime(60)
         setIncorrectButton(null)
         setCorrectButton(null)
         setButtonClass("")
@@ -138,17 +166,36 @@ export default function App() {
     function gameModeChange(mode) {
         setSettingsClass("")
         setGameMode(mode)
-        console.log(mode);
         restart()
         setTime(60)
     }
 
     useEffect(() => {
-        const timeInterval = setInterval(() => {
-            setTime(time => time - 1)
-        }, 1000);
-        return () => clearInterval(timeInterval)
-    }, [])
+        if (gameMode === "connectFlags") {
+            setLives(5)
+        }
+        else{
+            setLives(3)
+        }
+    }, [gameMode])
+
+    useEffect(() => {
+        // const interval = setInterval(() => {
+        //     setTime(time => time - 1)
+        // }, 1000);
+        // if (buttonClass === "disabled") {
+        //     clearInterval(interval)
+        // }
+        // return () => clearInterval(interval)
+    }, [buttonClass])
+
+    useEffect(() => {
+        if (time < 1 && gameType === "timer") {
+            setButtonClass("disabled")
+            console.log("Game Over");
+        }
+    }, [time])
+
 
     function gameTypeChange() {
         setGameType(gameType === "timer" ? "lives" : "timer")
@@ -161,27 +208,28 @@ export default function App() {
                 <form action="">
                     <h2 className="score">Score: {score}</h2>
                     <h1>Flag Quiz</h1>
-                    <h2 className="lives">{gameType === "lives" ? "Lives: " + lives : "Time: " + time}</h2>
+                    {gameType === "lives" ? 
+                    <h2 className="lives">Lives: {lives}</h2> : <Timer />}
                     <button type="button" className="settingsButton" onClick={() => setSettingsClass("settingsShow")}></button>
                     {gameMode === "oneFlagFourCountries" ? <img src={currentFlag} alt="" /> : <h2 className="countryName">{currentCountry}</h2>}
                     {buttons.map((element, id) => (
                         <button className={buttonClass + (id === correctButton ? " correct" : "") + (id === incorrectButton ? " incorrect" : "")} key={id} type="button" onClick={() => answer(element, id)}>{gameMode === "oneFlagFourCountries" ? element : <img src={element} alt="" />}</button>
                     ))}
                 </form>
-                <button style={lives < 1 ? { transform: "translateY(100%)" } : {}} className="restartButton" onClick={() => restart()}>Restart</button>
+                <button style={lives < 1 || time === 0 ? { transform: "translateY(100%)" } : {}} className="restartButton" onClick={() => restart()}>Restart</button>
             </div>
             <form className={"settings " + settingsClass} action="">
                 <h1>Settings</h1>
                 <div className="settingsLeft">
                     <button type="button" onClick={() => gameModeChange("oneFlagFourCountries")}>1 flag, 4 countries</button>
                     <button type="button" onClick={() => gameModeChange("oneCountryFourFlags")}>1 country, 4 flags</button>
-                    <button type="button" onClick={() => gameModeChange("ConnectFlags")}>Connect flags</button>
+                    {/* <button type="button" onClick={() => gameModeChange("connectFlags")}>Connect flags</button> */}
                 </div>
                 <div className="settingsRight">
                     <h3>3 lives</h3>
-                    <label class="switch">
+                    <label className="switch">
                         <input onChange={() => gameTypeChange()} type="checkbox" />
-                        <span class="slider round"></span>
+                        <span className="slider round"></span>
                     </label>
                     <h3>Timer</h3>
                 </div>
